@@ -32,7 +32,7 @@ serve(async (req) => {
 2. 針對所問問題的具體建議
 3. 需要注意的事項
 
-請用繁體中文回答，語氣要莊重但易懂，約150-200字。`;
+重要：請用與問題相同的語言回答（如果問題是英文就用英文，日文就用日文，中文就用中文）。語氣要莊重但易懂，約150-200字。`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
