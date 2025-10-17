@@ -1,0 +1,4 @@
+project_id = "yrclhnxzyugaxhknkrio"
+
+[functions.interpret-divination]
+verify_jwt = false

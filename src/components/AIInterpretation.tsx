@@ -14,7 +14,7 @@ export function AIInterpretation({ interpretation, isLoading }: AIInterpretation
         <Sparkles className="w-5 h-5 text-gold" />
         <h3 className="text-xl font-semibold">AI 智慧解讀</h3>
         <Badge variant="secondary" className="ml-auto">
-          本地運算
+          AI 解讀
         </Badge>
       </div>
 
@@ -32,7 +32,7 @@ export function AIInterpretation({ interpretation, isLoading }: AIInterpretation
       )}
 
       <div className="pt-2 text-xs text-muted-foreground border-t">
-        <p>💡 此解讀由本地 AI 模型生成，在您的瀏覽器中運行，無需上傳任何數據</p>
+        <p>💡 此解讀由 AI 智慧生成，結合傳統占卜智慧與現代技術</p>
       </div>
     </Card>
   );
