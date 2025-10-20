@@ -21,18 +21,20 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const prompt = `你是一位精通小六壬占卜的大師。請根據以下資訊，提供專業而富有智慧的解讀。
+    const prompt = `You are a master of Xiao Liu Ren divination. Based on the following information, provide a professional and wise interpretation.
 
-占卜結果：${resultName}（${resultFortune}）
-卦象說明：${resultDescription}
-問題：${question}
+Divination Result: ${resultName} (${resultFortune})
+Hexagram Description: ${resultDescription}
+Question: ${question}
 
-請提供：
-1. 對這個卦象的整體解讀
-2. 針對所問問題的具體建議
-3. 需要注意的事項
+Please provide:
+1. Overall interpretation of this hexagram
+2. Specific advice regarding the question
+3. Things to pay attention to
 
-重要：請用與問題相同的語言回答（如果問題是英文就用英文，日文就用日文，中文就用中文）。語氣要莊重但易懂，約150-200字。`;
+CRITICAL: You MUST respond in the SAME LANGUAGE as the question above. If the question is in English, respond in English. If in Japanese, respond in Japanese. If in Chinese, respond in Chinese.
+
+Your tone should be dignified yet understandable, around 150-200 words.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -43,7 +45,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: '你是一位精通中國傳統占卜的大師，特別擅長小六壬占卜。你的解讀深入淺出，既有傳統智慧又貼近現代生活。' },
+          { role: 'system', content: 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your personality is conservative and thoughtful, drawing from years of experience. Your interpretations are insightful yet practical, balancing traditional wisdom with a measured, mature perspective. You speak with the calm authority of someone who has seen much in life.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
