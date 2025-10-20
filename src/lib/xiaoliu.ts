@@ -8,7 +8,7 @@ export type DivinationResult = {
   color: string;
 };
 
-const POSITIONS = [
+const POSITIONS_ZH = [
   {
     name: "大安",
     description: "身不動時，五行屬木，顏色青色，方位東方。臨青龍，謀事主一、五、七。",
@@ -47,16 +47,66 @@ const POSITIONS = [
   },
 ];
 
+const POSITIONS_EN = [
+  {
+    name: "Da An (Great Peace)",
+    description: "Body at rest. Wood element, green color, east direction. Under Azure Dragon. Matters relate to 1, 5, 7.",
+    fortune: "Very Auspicious",
+    color: "jade",
+  },
+  {
+    name: "Liu Lian (Delay)",
+    description: "Person not yet returned. Water element, black color, north direction. Under Black Tortoise. Matters relate to 2, 8, 10.",
+    fortune: "Inauspicious",
+    color: "slate",
+  },
+  {
+    name: "Su Xi (Swift Joy)",
+    description: "Person arrives soon. Fire element, red color, south direction. Under Vermillion Bird. Matters relate to 3, 6, 9.",
+    fortune: "Very Auspicious",
+    color: "cinnabar",
+  },
+  {
+    name: "Chi Kou (Red Mouth)",
+    description: "Official troubles. Metal element, white color, west direction. Under White Tiger. Matters relate to 4, 7, 10.",
+    fortune: "Inauspicious",
+    color: "gray",
+  },
+  {
+    name: "Xiao Ji (Small Fortune)",
+    description: "Happy arrival. Wood element, green color, east direction. Under Six Harmony. Matters relate to 1, 5, 7.",
+    fortune: "Auspicious",
+    color: "gold",
+  },
+  {
+    name: "Kong Wang (Emptiness)",
+    description: "Scarce news. Earth element, yellow color, center direction. Under Hook Snake. Matters relate to 3, 6, 9.",
+    fortune: "Inauspicious",
+    color: "amber",
+  },
+];
+
+/**
+ * Detect language from text
+ */
+export function detectLanguage(text: string): 'zh' | 'en' {
+  // Check for Chinese characters
+  const chineseRegex = /[\u4e00-\u9fa5]/;
+  return chineseRegex.test(text) ? 'zh' : 'en';
+}
+
 /**
  * 根據月、日、時辰計算小六壬卦象
  * @param month 農曆月份 (1-12)
  * @param day 農曆日期 (1-30)
  * @param hour 時辰 (1-12，子時為1)
+ * @param language 語言 ('zh' | 'en')
  */
 export function calculateXiaoLiuRen(
   month: number,
   day: number,
-  hour: number
+  hour: number,
+  language: 'zh' | 'en' = 'zh'
 ): DivinationResult {
   // 第一步：月 + 日，定第一位
   const first = ((month + day - 1) % 6);
@@ -67,8 +117,10 @@ export function calculateXiaoLiuRen(
   // 第三步：第二位 + 時，定第三位（最終結果）
   const final = ((second + hour - 1) % 6);
   
+  const positions = language === 'en' ? POSITIONS_EN : POSITIONS_ZH;
+  
   return {
-    ...POSITIONS[final],
+    ...positions[final],
     position: final + 1,
   };
 }

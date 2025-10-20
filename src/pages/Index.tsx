@@ -2,7 +2,7 @@ import { useState } from "react";
 import { DivinationForm } from "@/components/DivinationForm";
 import { DivinationCard } from "@/components/DivinationCard";
 import { AIInterpretation } from "@/components/AIInterpretation";
-import { calculateXiaoLiuRen, type DivinationResult } from "@/lib/xiaoliu";
+import { calculateXiaoLiuRen, detectLanguage, type DivinationResult } from "@/lib/xiaoliu";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -23,16 +23,22 @@ const Index = () => {
     setInterpretation("");
     setCurrentQuestion(data.question);
 
+    // 檢測問題語言
+    const language = detectLanguage(data.question);
+
     // 計算卦象
-    const divinationResult = calculateXiaoLiuRen(data.month, data.day, data.hour);
+    const divinationResult = calculateXiaoLiuRen(data.month, data.day, data.hour, language);
     
     // 添加動畫延遲
     setTimeout(async () => {
       setResult(divinationResult);
 
+      const isEnglish = language === 'en';
       toast({
-        title: "占卜完成",
-        description: `得到「${divinationResult.name}」卦`,
+        title: isEnglish ? "Divination Complete" : "占卜完成",
+        description: isEnglish 
+          ? `Result: "${divinationResult.name}"` 
+          : `得到「${divinationResult.name}」卦`,
       });
 
       // 自動生成 AI 解讀

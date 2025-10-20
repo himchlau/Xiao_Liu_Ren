@@ -32,9 +32,12 @@ Please provide:
 2. Specific advice regarding the question
 3. Things to pay attention to
 
-CRITICAL: You MUST respond in the SAME LANGUAGE as the question above. If the question is in English, respond in English. If in Japanese, respond in Japanese. If in Chinese, respond in Chinese.
-
-Your tone should be dignified yet understandable, around 150-200 words.`;
+CRITICAL REQUIREMENTS:
+- You MUST respond in the SAME LANGUAGE as the question above. If the question is in English, respond in English. If in Japanese, respond in Japanese. If in Chinese, respond in Chinese.
+- Use MODERN, EVERYDAY LANGUAGE that regular people use in daily conversations. Avoid overly formal or archaic expressions.
+- For ENGLISH responses: Keep it to 150 words maximum.
+- For CHINESE responses: Keep it to 200 characters maximum.
+- Your tone should be warm, friendly, and conversational, like a wise friend giving practical advice.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -45,7 +48,7 @@ Your tone should be dignified yet understandable, around 150-200 words.`;
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your personality is conservative and thoughtful, drawing from years of experience. Your interpretations are insightful yet practical, balancing traditional wisdom with a measured, mature perspective. You speak with the calm authority of someone who has seen much in life.' },
+          { role: 'system', content: 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your personality is conservative and thoughtful, drawing from years of experience. Your interpretations are insightful yet practical, balancing traditional wisdom with a measured, mature perspective. You speak with the calm authority of someone who has seen much in life. IMPORTANT: Always use modern, everyday language that regular people use in conversations - avoid overly formal or archaic expressions. Be warm and friendly like a wise friend.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
