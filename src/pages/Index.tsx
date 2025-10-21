@@ -5,6 +5,7 @@ import { AIInterpretation } from "@/components/AIInterpretation";
 import { calculateXiaoLiuRen, detectLanguage, type DivinationResult } from "@/lib/xiaoliu";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import templeBg from "@/assets/temple_lanterns.jpg";
 
 const Index = () => {
   const [result, setResult] = useState<DivinationResult | null>(null);
@@ -81,8 +82,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-jade/5">
-      <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{ backgroundImage: `url(${templeBg})` }}>
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+      <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8 relative z-10">
         {/* Header */}
         <header className="text-center space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">
