@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { TRADITIONAL_HOURS, modernHourToTraditional } from "@/lib/xiaoliu";
 import { Sparkles } from "lucide-react";
+import { Solar } from "lunar-javascript";
 
 interface DivinationFormProps {
   onSubmit: (data: {
@@ -32,6 +33,25 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
   const [day, setDay] = useState(now.getDate());
   const [hour, setHour] = useState(modernHourToTraditional(now.getHours()));
   const [question, setQuestion] = useState("");
+  const [lunarDate, setLunarDate] = useState("");
+
+  // 計算並更新農曆日期
+  useEffect(() => {
+    try {
+      const solar = Solar.fromYmd(year, month, day);
+      const lunar = solar.getLunar();
+      const lunarMonth = lunar.getMonth();
+      const lunarDay = lunar.getDay();
+      const lunarYear = lunar.getYear();
+      const yearInChinese = lunar.getYearInChinese();
+      const monthInChinese = lunar.getMonthInChinese();
+      const dayInChinese = lunar.getDayInChinese();
+      
+      setLunarDate(`${yearInChinese}年 ${monthInChinese}月${dayInChinese} (${lunarYear}-${lunarMonth}-${lunarDay})`);
+    } catch (error) {
+      setLunarDate("日期無效");
+    }
+  }, [year, month, day]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +155,12 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          {/* 顯示農曆日期 */}
+          <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/10">
+            <div className="text-sm text-muted-foreground mb-1">對應農曆日期：</div>
+            <div className="text-base font-semibold text-primary">{lunarDate}</div>
           </div>
         </div>
 
