@@ -108,20 +108,14 @@ export function calculateXiaoLiuRen(
   hour: number,
   language: 'zh' | 'en' = 'zh'
 ): DivinationResult {
-  // 第一步：月 + 日，定第一位
-  const first = ((month + day - 1) % 6);
-  
-  // 第二步：第一位 + 時，定第二位
-  const second = ((first + hour - 1) % 6);
-  
-  // 第三步：第二位 + 時，定第三位（最終結果）
-  const final = ((second + hour - 1) % 6);
+  // 使用新公式：(月 + 日 + 時 - 2) % 6
+  const result = ((month + day + hour - 2) % 6);
   
   const positions = language === 'en' ? POSITIONS_EN : POSITIONS_ZH;
   
   return {
-    ...positions[final],
-    position: final + 1,
+    ...positions[result],
+    position: result + 1,
   };
 }
 

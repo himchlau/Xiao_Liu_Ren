@@ -6,6 +6,7 @@ import { calculateXiaoLiuRen, detectLanguage, type DivinationResult } from "@/li
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import templeBg from "@/assets/temple_lanterns.jpg";
+import { Solar } from "lunar-javascript";
 
 const Index = () => {
   const [result, setResult] = useState<DivinationResult | null>(null);
@@ -15,6 +16,7 @@ const Index = () => {
   const { toast } = useToast();
 
   const handleDivination = async (data: {
+    year: number;
     month: number;
     day: number;
     hour: number;
@@ -24,27 +26,46 @@ const Index = () => {
     setInterpretation("");
     setCurrentQuestion(data.question);
 
-    // 檢測問題語言
-    const language = detectLanguage(data.question);
+    try {
+      // 將陽曆轉換為農曆
+      const solar = Solar.fromYmd(data.year, data.month, data.day);
+      const lunar = solar.getLunar();
+      
+      const lunarMonth = lunar.getMonth();
+      const lunarDay = lunar.getDay();
+      
+      console.log(`陽曆: ${data.year}-${data.month}-${data.day} -> 農曆: ${lunarMonth}月${lunarDay}日`);
+      
+      // 檢測問題語言
+      const language = detectLanguage(data.question);
 
-    // 計算卦象
-    const divinationResult = calculateXiaoLiuRen(data.month, data.day, data.hour, language);
-    
-    // 添加動畫延遲
-    setTimeout(async () => {
-      setResult(divinationResult);
+      // 使用農曆日期計算卦象
+      const divinationResult = calculateXiaoLiuRen(lunarMonth, lunarDay, data.hour, language);
+      
+      // 添加動畫延遲
+      setTimeout(async () => {
+        setResult(divinationResult);
 
-      const isEnglish = language === 'en';
+        const isEnglish = language === 'en';
+        toast({
+          title: isEnglish ? "Divination Complete" : "占卜完成",
+          description: isEnglish 
+            ? `Lunar Date: ${lunarMonth}/${lunarDay} - Result: "${divinationResult.name}"` 
+            : `農曆: ${lunarMonth}月${lunarDay}日 - 得到「${divinationResult.name}」卦`,
+        });
+
+        // 自動生成 AI 解讀
+        await generateInterpretation(divinationResult, data.question);
+      }, 800);
+    } catch (error) {
+      console.error("日期轉換錯誤:", error);
       toast({
-        title: isEnglish ? "Divination Complete" : "占卜完成",
-        description: isEnglish 
-          ? `Result: "${divinationResult.name}"` 
-          : `得到「${divinationResult.name}」卦`,
+        title: "日期轉換失敗",
+        description: "無法將陽曆轉換為農曆，請檢查輸入的日期是否正確",
+        variant: "destructive",
       });
-
-      // 自動生成 AI 解讀
-      await generateInterpretation(divinationResult, data.question);
-    }, 800);
+      setIsLoading(false);
+    }
   };
 
   const generateInterpretation = async (

@@ -16,6 +16,7 @@ import { Sparkles } from "lucide-react";
 
 interface DivinationFormProps {
   onSubmit: (data: {
+    year: number;
     month: number;
     day: number;
     hour: number;
@@ -26,6 +27,7 @@ interface DivinationFormProps {
 
 export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
   const now = new Date();
+  const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [day, setDay] = useState(now.getDate());
   const [hour, setHour] = useState(modernHourToTraditional(now.getHours()));
@@ -33,11 +35,12 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ month, day, hour, question });
+    onSubmit({ year, month, day, hour, question });
   };
 
   const useCurrentTime = () => {
     const now = new Date();
+    setYear(now.getFullYear());
     setMonth(now.getMonth() + 1);
     setDay(now.getDate());
     setHour(modernHourToTraditional(now.getHours()));
@@ -62,7 +65,7 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-base">選擇時間</Label>
+            <Label className="text-base">選擇陽曆時間</Label>
             <Button
               type="button"
               variant="outline"
@@ -74,7 +77,20 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </Button>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="year">年份</Label>
+              <Input
+                id="year"
+                type="number"
+                min="1900"
+                max="2100"
+                value={year}
+                onChange={(e) => setYear(parseInt(e.target.value))}
+                required
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="month">月份</Label>
               <Input
