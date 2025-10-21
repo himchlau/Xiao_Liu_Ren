@@ -44,7 +44,7 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
   };
 
   return (
-    <Card className="p-6 shadow-soft">
+    <Card className="p-6 shadow-soft bg-card/70 backdrop-blur-sm">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="question" className="text-lg font-semibold">
