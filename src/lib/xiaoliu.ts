@@ -108,8 +108,9 @@ export function calculateXiaoLiuRen(
   hour: number,
   language: 'zh' | 'en' = 'zh'
 ): DivinationResult {
-  // 使用新公式：(月 + 日 + 時 - 2) % 6
-  const result = ((month + day + hour - 2) % 6);
+  // 月數日減1, 日數時減1, 大安由0開始算減1
+  // 使用公式：(月 + 日 + 時 - 3) % 6
+  const result = ((month + day + hour - 3) % 6);
   
   const positions = language === 'en' ? POSITIONS_EN : POSITIONS_ZH;
   
