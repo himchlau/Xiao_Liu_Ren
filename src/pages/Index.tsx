@@ -109,9 +109,15 @@ const Index = () => {
         {/* Header */}
         <header className="text-center space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">
-            小六壬占卜系統
+            Xiao Liu Ren Divination System
           </h1>
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">
+            小六壬占卜系統
+          </h2>
           <p className="text-muted-foreground text-lg">
+            Traditional Wisdom × AI Interpretation · Palm Mysteries, Instant Insights
+          </p>
+          <p className="text-muted-foreground">
             傳統智慧 × AI 解讀 · 掌中玄機，即刻解惑
           </p>
         </header>
@@ -134,8 +140,10 @@ const Index = () => {
 
         {/* Footer */}
         <footer className="text-center text-sm text-muted-foreground pt-8 border-t animate-in fade-in-50 duration-700 delay-300">
+          <p>Xiao Liu Ren originates from traditional Chinese divination, this system is for reference and entertainment only</p>
           <p>小六壬源自中國傳統術數，此系統僅供參考娛樂</p>
-          <p className="mt-2">✨ AI 智慧解讀 · 傳統與科技結合</p>
+          <p className="mt-2">✨ AI Smart Interpretation · Bridging Tradition and Technology</p>
+          <p>✨ AI 智慧解讀 · 傳統與科技結合</p>
         </footer>
       </div>
     </div>
