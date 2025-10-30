@@ -71,11 +71,12 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="question" className="text-lg font-semibold">
-            請輸入您的問題
+            <div>Enter Your Question</div>
+            <div className="text-base">請輸入您的問題</div>
           </Label>
           <Textarea
             id="question"
-            placeholder="例如：今日財運如何？"
+            placeholder="e.g., What is my fortune today? / 例如：今日財運如何？"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             required
@@ -85,7 +86,10 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <Label className="text-base">選擇陽曆時間</Label>
+            <Label className="text-base">
+              <div>Select Solar Date & Time</div>
+              <div className="text-sm">選擇陽曆時間</div>
+            </Label>
             <Button
               type="button"
               variant="outline"
@@ -93,13 +97,15 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
               onClick={useCurrentTime}
               className="text-xs"
             >
-              使用當前時間
+              Use Current Time / 使用當前時間
             </Button>
           </div>
 
           <div className="grid grid-cols-4 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="year">年份</Label>
+              <Label htmlFor="year">
+                <div>Year / 年份</div>
+              </Label>
               <Input
                 id="year"
                 type="number"
@@ -112,7 +118,9 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="month">月份</Label>
+              <Label htmlFor="month">
+                <div>Month / 月份</div>
+              </Label>
               <Input
                 id="month"
                 type="number"
@@ -125,7 +133,9 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="day">日期</Label>
+              <Label htmlFor="day">
+                <div>Day / 日期</div>
+              </Label>
               <Input
                 id="day"
                 type="number"
@@ -138,7 +148,9 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="hour">時辰</Label>
+              <Label htmlFor="hour">
+                <div>Hour / 時辰</div>
+              </Label>
               <Select
                 value={hour.toString()}
                 onValueChange={(value) => setHour(parseInt(value))}
@@ -159,7 +171,10 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
 
           {/* 顯示農曆日期 */}
           <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/10">
-            <div className="text-sm text-muted-foreground mb-1">對應農曆日期：</div>
+            <div className="text-sm text-muted-foreground mb-1">
+              <div>Corresponding Lunar Date:</div>
+              <div>對應農曆日期：</div>
+            </div>
             <div className="text-base font-semibold text-primary">{lunarDate}</div>
           </div>
         </div>
@@ -173,12 +188,12 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
           {isLoading ? (
             <span className="flex items-center gap-2">
               <span className="animate-spin">⏳</span>
-              占卜中...
+              Divining... / 占卜中...
             </span>
           ) : (
             <span className="flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
-              開始占卜
+              Start Divination / 開始占卜
             </span>
           )}
         </Button>
