@@ -1,5 +1,7 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,21 +9,39 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import templeLanterns from "@/assets/temple_lanterns.jpg";
 import { Sparkles } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+
+const emailSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "Email is required / 請輸入電子郵件" })
+    .email({ message: "Invalid email address / 無效的電子郵件地址" })
+    .max(255, { message: "Email must be less than 255 characters / 電子郵件必須少於255個字符" }),
+});
 
 const Welcome = () => {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  
+  const form = useForm<z.infer<typeof emailSchema>>({
+    resolver: zodResolver(emailSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  const handleSubmit = async (values: z.infer<typeof emailSchema>) => {
     try {
       const { error } = await supabase
         .from("email_subscribers")
-        .insert([{ email }]);
+        .insert([{ email: values.email }]);
 
       if (error) {
         if (error.code === "23505") {
@@ -41,14 +61,11 @@ const Welcome = () => {
 
       navigate("/divination");
     } catch (error) {
-      console.error("Error saving email:", error);
       toast({
         title: "Error",
         description: "Failed to save email. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -79,46 +96,55 @@ const Welcome = () => {
         </div>
 
         <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-lg font-semibold">
-                <div>Enter Your Email</div>
-                <div className="text-base">輸入您的電子郵件</div>
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your.email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="text-base"
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="email" className="text-lg font-semibold">
+                      <div>Enter Your Email</div>
+                      <div className="text-base">輸入您的電子郵件</div>
+                    </Label>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        className="text-base"
+                        {...field}
+                      />
+                    </FormControl>
+                    <p className="text-sm text-muted-foreground">
+                      Get started with your divination journey
+                      <br />
+                      開始您的占卜之旅
+                    </p>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <p className="text-sm text-muted-foreground">
-                Get started with your divination journey
-                <br />
-                開始您的占卜之旅
-              </p>
-            </div>
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full text-lg py-6"
-            >
-              {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <span className="animate-spin">⏳</span>
-                  Loading... / 載入中...
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" />
-                  Continue to Divination / 繼續占卜
-                </span>
-              )}
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="w-full text-lg py-6"
+              >
+                {form.formState.isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <span className="animate-spin">⏳</span>
+                    Loading... / 載入中...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    Continue to Divination / 繼續占卜
+                  </span>
+                )}
+              </Button>
+            </form>
+          </Form>
 
           <div className="mt-6 text-center">
             <button
