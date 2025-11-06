@@ -56,7 +56,7 @@ const Index = () => {
 
         // 自動生成 AI 解讀
         await generateInterpretation(divinationResult, data.question);
-      }, 800);
+      }, 1000);
     } catch (error) {
       console.error("日期轉換錯誤:", error);
       toast({
