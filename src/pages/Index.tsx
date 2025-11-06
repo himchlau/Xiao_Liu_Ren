@@ -108,16 +108,16 @@ const Index = () => {
       <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8 relative z-10">
         {/* Header */}
         <header className="text-center space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-transparent">
             Xiao Liu Ren Divination System
           </h1>
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-transparent">
             小六壬占卜系統
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-white text-lg">
             Traditional Wisdom × AI Interpretation · Palm Mysteries, Instant Insights
           </p>
-          <p className="text-muted-foreground">
+          <p className="text-white">
             傳統智慧 × AI 解讀 · 掌中玄機，即刻解惑
           </p>
         </header>
