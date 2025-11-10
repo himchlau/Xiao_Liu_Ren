@@ -130,7 +130,7 @@ const Index = () => {
           <p>小六壬源自中國傳統術數，此系統僅供參考娛樂</p>
           <p className="mt-2">✨ AI Smart Interpretation · Bridging Tradition and Technology</p>
           <p>✨ AI 智慧解讀 · 傳統與科技結合</p>
-          <p className="mt-4">© 2023 Sun Sky</p>
+          <p className="mt-4">© 2023 .Master Sun Sky</p>
         </footer>
       </div>
     </div>;
