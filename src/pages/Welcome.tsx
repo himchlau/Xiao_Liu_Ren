@@ -155,6 +155,10 @@ const Welcome = () => {
             </button>
           </div>
         </div>
+        
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          © 2023 Sun Sky
+        </p>
       </div>
     </div>
   );
