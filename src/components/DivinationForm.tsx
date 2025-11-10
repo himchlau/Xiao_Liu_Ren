@@ -85,7 +85,7 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <Label className="text-base">
               <div>Select Solar Date & Time</div>
               <div className="text-sm">選擇陽曆時間</div>
@@ -95,16 +95,16 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
               variant="outline"
               size="sm"
               onClick={useCurrentTime}
-              className="text-xs"
+              className="text-xs whitespace-nowrap"
             >
               Use Current Time / 使用當前時間
             </Button>
           </div>
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="space-y-2">
-              <Label htmlFor="year">
-                <div>Year / 年份</div>
+              <Label htmlFor="year" className="text-sm">
+                Year / 年份
               </Label>
               <Input
                 id="year"
@@ -118,8 +118,8 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="month">
-                <div>Month / 月份</div>
+              <Label htmlFor="month" className="text-sm">
+                Month / 月份
               </Label>
               <Input
                 id="month"
@@ -133,8 +133,8 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="day">
-                <div>Day / 日期</div>
+              <Label htmlFor="day" className="text-sm">
+                Day / 日期
               </Label>
               <Input
                 id="day"
@@ -148,8 +148,8 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="hour">
-                <div>Hour / 時辰</div>
+              <Label htmlFor="hour" className="text-sm">
+                Hour / 時辰
               </Label>
               <Select
                 value={hour.toString()}
