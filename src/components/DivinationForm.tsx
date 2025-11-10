@@ -158,7 +158,7 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
                 <SelectTrigger id="hour">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent align="start" className="max-h-[300px]">
                   {TRADITIONAL_HOURS.map((h) => (
                     <SelectItem key={h.value} value={h.value.toString()}>
                       {h.label}
