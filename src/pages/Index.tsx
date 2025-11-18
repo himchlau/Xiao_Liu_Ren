@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DivinationForm } from "@/components/DivinationForm";
 import { DivinationCard } from "@/components/DivinationCard";
 import { AIInterpretation } from "@/components/AIInterpretation";
+import { EmailSubscribe } from "@/components/EmailSubscribe";
 import { calculateXiaoLiuRen, detectLanguage, type DivinationResult } from "@/lib/xiaoliu";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -123,6 +124,11 @@ const Index = () => {
             <DivinationCard result={result} />
             <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} />
           </div>}
+
+        {/* Email Subscribe */}
+        <div className="animate-in fade-in-50 duration-700 delay-200">
+          <EmailSubscribe />
+        </div>
 
         {/* Footer */}
         <footer className="text-center text-sm text-muted-foreground pt-8 border-t animate-in fade-in-50 duration-700 delay-300">
