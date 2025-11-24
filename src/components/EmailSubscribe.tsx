@@ -59,29 +59,29 @@ export const EmailSubscribe = () => {
   };
 
   return (
-    <div className="bg-background/80 backdrop-blur-sm rounded-lg p-6 border border-border shadow-lg">
-      <div className="text-center space-y-3 mb-4">
+    <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-border shadow-lg">
+      <div className="text-center space-y-2 sm:space-y-3 mb-3 sm:mb-4">
         <div className="flex justify-center">
-          <Mail className="w-8 h-8 text-primary" />
+          <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
         </div>
-        <h3 className="text-xl font-semibold text-foreground">
+        <h3 className="text-lg sm:text-xl font-semibold text-foreground">
           訂閱占卜通訊
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground px-2">
           Subscribe for divination updates and insights
         </p>
       </div>
       
-      <form onSubmit={handleSubscribe} className="flex gap-2">
+      <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
         <Input
           type="email"
           placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isLoading}
-          className="flex-1"
+          className="flex-1 text-sm sm:text-base"
         />
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-sm sm:text-base">
           {isLoading ? "訂閱中..." : "訂閱"}
         </Button>
       </form>
