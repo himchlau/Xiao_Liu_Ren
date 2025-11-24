@@ -97,19 +97,19 @@ const Index = () => {
     backgroundImage: `url(${templeBg})`
   }}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
-      <div className="container max-w-4xl mx-auto px-4 py-8 md:py-12 space-y-8 relative z-10">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 space-y-6 sm:space-y-8 relative z-10">
         {/* Header */}
-        <header className="text-center space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
+        <header className="text-center space-y-3 sm:space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700 px-2">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
             Xiao Liu Ren Divination System
           </h1>
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
             小六壬占卜系統
           </h2>
-          <p className="text-white text-lg">
+          <p className="text-white text-base sm:text-lg leading-relaxed">
             Traditional Wisdom × AI Interpretation · Palm Mysteries, Instant Insights
           </p>
-          <p className="text-white">
+          <p className="text-white text-sm sm:text-base leading-relaxed">
             傳統智慧 × AI 解讀 · 掌中玄機，即刻解惑
           </p>
         </header>
@@ -120,7 +120,7 @@ const Index = () => {
         </div>
 
         {/* Results */}
-        {result && <div className="space-y-6">
+        {result && <div className="space-y-4 sm:space-y-6">
             <DivinationCard result={result} />
             <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} />
           </div>}
@@ -131,12 +131,12 @@ const Index = () => {
         </div>
 
         {/* Footer */}
-        <footer className="text-center text-sm text-muted-foreground pt-8 border-t animate-in fade-in-50 duration-700 delay-300">
-          <p>Xiao Liu Ren originates from traditional Chinese divination, this system is for reference and entertainment only</p>
-          <p>小六壬源自中國傳統術數，此系統僅供參考娛樂</p>
-          <p className="mt-2">✨ AI Smart Interpretation · Bridging Tradition and Technology</p>
-          <p>✨ AI 智慧解讀 · 傳統與科技結合</p>
-          <p className="mt-4">© 2023 Master Sun Sky</p>
+        <footer className="text-center text-xs sm:text-sm text-muted-foreground pt-6 sm:pt-8 border-t animate-in fade-in-50 duration-700 delay-300 px-2">
+          <p className="leading-relaxed">Xiao Liu Ren originates from traditional Chinese divination, this system is for reference and entertainment only</p>
+          <p className="leading-relaxed mt-1">小六壬源自中國傳統術數，此系統僅供參考娛樂</p>
+          <p className="mt-3 sm:mt-2 leading-relaxed">✨ AI Smart Interpretation · Bridging Tradition and Technology</p>
+          <p className="leading-relaxed">✨ AI 智慧解讀 · 傳統與科技結合</p>
+          <p className="mt-3 sm:mt-4">© 2023 Master Sun Sky</p>
         </footer>
       </div>
     </div>;

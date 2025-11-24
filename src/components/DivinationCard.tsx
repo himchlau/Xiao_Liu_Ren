@@ -23,23 +23,23 @@ export function DivinationCard({ result }: DivinationCardProps) {
     : "bg-destructive text-destructive-foreground";
 
   return (
-    <Card className="p-6 space-y-4 shadow-divine border-2 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-jade to-gold bg-clip-text text-transparent">
+    <Card className="p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-divine border-2 animate-in fade-in-50 slide-in-from-bottom-4 duration-700">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-jade to-gold bg-clip-text text-transparent">
           {result.name}
         </h2>
-        <Badge className={fortuneColor}>
+        <Badge className={`${fortuneColor} text-xs sm:text-sm whitespace-nowrap`}>
           {result.fortune}
         </Badge>
       </div>
       
-      <div className={`rounded-lg p-4 ${colorClass} shadow-soft`}>
-        <p className="text-sm leading-relaxed">
+      <div className={`rounded-lg p-3 sm:p-4 ${colorClass} shadow-soft`}>
+        <p className="text-xs sm:text-sm leading-relaxed">
           {result.description}
         </p>
       </div>
 
-      <div className="pt-2 text-sm text-muted-foreground">
+      <div className="pt-1 sm:pt-2 text-xs sm:text-sm text-muted-foreground">
         <p>位置：第 {result.position} 位</p>
       </div>
     </Card>

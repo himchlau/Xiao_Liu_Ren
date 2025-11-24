@@ -67,12 +67,12 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
   };
 
   return (
-    <Card className="p-6 shadow-soft bg-card/70 backdrop-blur-sm">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <Card className="p-4 sm:p-6 shadow-soft bg-card/70 backdrop-blur-sm">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="question" className="text-lg font-semibold">
+          <Label htmlFor="question" className="text-base sm:text-lg font-semibold">
             <div>Enter Your Question</div>
-            <div className="text-base">請輸入您的問題</div>
+            <div className="text-sm sm:text-base">請輸入您的問題</div>
           </Label>
           <Textarea
             id="question"
@@ -80,28 +80,29 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             required
-            className="min-h-[100px] resize-none"
+            className="min-h-[80px] sm:min-h-[100px] resize-none text-sm sm:text-base"
           />
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <Label className="text-base">
+            <Label className="text-sm sm:text-base">
               <div>Select Solar Date & Time</div>
-              <div className="text-sm">選擇陽曆時間</div>
+              <div className="text-xs sm:text-sm">選擇陽曆時間</div>
             </Label>
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={useCurrentTime}
-              className="text-xs whitespace-nowrap"
+              className="text-xs sm:text-sm whitespace-nowrap h-8 sm:h-9 px-2 sm:px-3"
             >
-              Use Current Time / 使用當前時間
+              <span className="hidden sm:inline">Use Current Time / 使用當前時間</span>
+              <span className="sm:hidden">Current Time / 當前時間</span>
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
             <div className="space-y-2">
               <Label htmlFor="year" className="text-sm">
                 Year / 年份
@@ -176,12 +177,12 @@ export function DivinationForm({ onSubmit, isLoading }: DivinationFormProps) {
           </div>
 
           {/* 顯示農曆日期 */}
-          <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/10">
-            <div className="text-sm text-muted-foreground mb-1">
+          <div className="mt-3 sm:mt-4 p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-primary/10">
+            <div className="text-xs sm:text-sm text-muted-foreground mb-1">
               <div>Corresponding Lunar Date:</div>
               <div>對應農曆日期：</div>
             </div>
-            <div className="text-base font-semibold text-primary">{lunarDate}</div>
+            <div className="text-sm sm:text-base font-semibold text-primary break-words">{lunarDate}</div>
           </div>
         </div>
 
