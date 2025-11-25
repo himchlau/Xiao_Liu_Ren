@@ -62,7 +62,7 @@ export const Header = () => {
           </NavigationMenu>
 
           <a
-            href="https://www.fb.com/mastersunsky"
+            href="https://www.facebook.com/mastersunsky"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-foreground hover:text-primary transition-colors"
@@ -105,7 +105,7 @@ export const Header = () => {
 
               <div className="border-t pt-4 space-y-2">
                 <a
-                  href="https://www.fb.com/mastersunsky"
+                  href="https://www.facebook.com/mastersunsky"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}
