@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Header } from "@/components/Header";
 import { DivinationForm } from "@/components/DivinationForm";
 import { DivinationCard } from "@/components/DivinationCard";
 import { AIInterpretation } from "@/components/AIInterpretation";
@@ -93,52 +94,89 @@ const Index = () => {
       setIsLoading(false);
     }
   };
-  return <div className="min-h-screen bg-cover bg-center bg-no-repeat relative" style={{
-    backgroundImage: `url(${templeBg})`
-  }}>
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 space-y-6 sm:space-y-8 relative z-10">
-        {/* Header */}
-        <header className="text-center space-y-3 sm:space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700 px-2">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
-            Xiao Liu Ren Divination System
-          </h1>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
-            小六壬占卜系統
-          </h2>
-          <p className="text-white text-base sm:text-lg leading-relaxed">
-            Traditional Wisdom × AI Interpretation · Palm Mysteries, Instant Insights
-          </p>
-          <p className="text-white text-sm sm:text-base leading-relaxed">
-            傳統智慧 × AI 解讀 · 掌中玄機，即刻解惑
-          </p>
-        </header>
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <Header />
 
-        {/* Form */}
-        <div className="animate-in fade-in-50 slide-in-from-bottom-4 duration-700 delay-100">
-          <DivinationForm onSubmit={handleDivination} isLoading={isLoading} />
+      {/* Hero Section with Background */}
+      <main className="flex-1 bg-cover bg-center bg-no-repeat relative" style={{
+        backgroundImage: `url(${templeBg})`
+      }}>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+        
+        <div id="divination" className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 space-y-6 sm:space-y-8 relative z-10">
+          {/* Hero Title */}
+          <div className="text-center space-y-3 sm:space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700 px-2">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
+              Xiao Liu Ren Divination System
+            </h2>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
+              小六壬占卜系統
+            </h3>
+            <p className="text-white text-base sm:text-lg leading-relaxed">
+              Traditional Wisdom × AI Interpretation · Palm Mysteries, Instant Insights
+            </p>
+            <p className="text-white text-sm sm:text-base leading-relaxed">
+              傳統智慧 × AI 解讀 · 掌中玄機，即刻解惑
+            </p>
+          </div>
+
+          {/* Divination Form */}
+          <div className="animate-in fade-in-50 slide-in-from-bottom-4 duration-700 delay-100">
+            <DivinationForm onSubmit={handleDivination} isLoading={isLoading} />
+          </div>
+
+          {/* Results */}
+          {result && (
+            <div className="space-y-4 sm:space-y-6">
+              <DivinationCard result={result} />
+              <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} />
+            </div>
+          )}
+
+          {/* About Section */}
+          <div id="about" className="animate-in fade-in-50 duration-700 delay-200 bg-background/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-border">
+            <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
+              關於小六壬 / About Xiao Liu Ren
+            </h3>
+            <div className="space-y-2 text-sm sm:text-base text-foreground/90">
+              <p>
+                小六壬是中國傳統占卜術之一，相傳源於三國時期諸葛亮，以簡單易學、快速靈驗著稱。通過時間（月、日、時辰）推算六神位置，預測吉凶。
+              </p>
+              <p>
+                Xiao Liu Ren is a traditional Chinese divination method, believed to originate from Zhuge Liang during the Three Kingdoms period. Known for being simple to learn and quick in providing insights, it calculates the positions of six deities based on time (month, day, hour) to predict fortune and misfortune.
+              </p>
+            </div>
+          </div>
         </div>
+      </main>
 
-        {/* Results */}
-        {result && <div className="space-y-4 sm:space-y-6">
-            <DivinationCard result={result} />
-            <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} />
-          </div>}
-
-        {/* Email Subscribe */}
-        <div className="animate-in fade-in-50 duration-700 delay-200">
+      {/* Footer */}
+      <footer className="bg-background border-t">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+          {/* Email Subscribe */}
           <EmailSubscribe />
-        </div>
 
-        {/* Footer */}
-        <footer className="text-center text-xs sm:text-sm text-muted-foreground pt-6 sm:pt-8 border-t animate-in fade-in-50 duration-700 delay-300 px-2">
-          <p className="leading-relaxed">Xiao Liu Ren originates from traditional Chinese divination, this system is for reference and entertainment only</p>
-          <p className="leading-relaxed mt-1">小六壬源自中國傳統術數，此系統僅供參考娛樂</p>
-          <p className="mt-3 sm:mt-2 leading-relaxed">✨ AI Smart Interpretation · Bridging Tradition and Technology</p>
-          <p className="leading-relaxed">✨ AI 智慧解讀 · 傳統與科技結合</p>
-          <p className="mt-3 sm:mt-4">© 2023 Master Sun Sky</p>
-        </footer>
-      </div>
-    </div>;
+          {/* Copyright & Info */}
+          <div className="text-center text-xs sm:text-sm text-muted-foreground pt-4 border-t">
+            <p className="leading-relaxed">
+              Xiao Liu Ren originates from traditional Chinese divination, this system is for reference and entertainment only
+            </p>
+            <p className="leading-relaxed mt-1">
+              小六壬源自中國傳統術數，此系統僅供參考娛樂
+            </p>
+            <p className="mt-3 sm:mt-2 leading-relaxed">
+              ✨ AI Smart Interpretation · Bridging Tradition and Technology
+            </p>
+            <p className="leading-relaxed">
+              ✨ AI 智慧解讀 · 傳統與科技結合
+            </p>
+            <p className="mt-3 sm:mt-4">© 2023 Master Sun Sky</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 };
 export default Index;
