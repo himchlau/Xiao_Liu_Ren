@@ -22,7 +22,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo/Title */}
         <div className="flex items-center gap-2">
-          <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">日天師傅 Master Sun Sky</h1>
+          <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-jade via-gold to-cinnabar bg-clip-text text-transparent">日天師傅 Master Sun Sky</h2>
         </div>
 
         {/* Desktop Navigation */}
