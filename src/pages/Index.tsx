@@ -107,12 +107,12 @@ const Index = () => {
         <div id="divination" className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 space-y-6 sm:space-y-8 relative z-10">
           {/* Hero Title */}
           <div className="text-center space-y-3 sm:space-y-4 animate-in fade-in-50 slide-in-from-top-4 duration-700 px-2">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
               Xiao Liu Ren Divination System
-            </h2>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
+            </h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
               小六壬占卜系統
-            </h3>
+            </h1>
             <p className="text-white text-base sm:text-lg leading-relaxed">
               Traditional Wisdom × AI Interpretation · Palm Mysteries, Instant Insights
             </p>
