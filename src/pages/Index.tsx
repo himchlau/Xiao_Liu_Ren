@@ -94,15 +94,14 @@ const Index = () => {
       setIsLoading(false);
     }
   };
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       {/* Header */}
       <Header />
 
       {/* Hero Section with Background */}
       <main className="flex-1 bg-cover bg-center bg-no-repeat relative" style={{
-        backgroundImage: `url(${templeBg})`
-      }}>
+      backgroundImage: `url(${templeBg})`
+    }}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
         
         <div id="divination" className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 space-y-6 sm:space-y-8 relative z-10">
@@ -128,12 +127,10 @@ const Index = () => {
           </div>
 
           {/* Results */}
-          {result && (
-            <div className="space-y-4 sm:space-y-6">
+          {result && <div className="space-y-4 sm:space-y-6">
               <DivinationCard result={result} />
               <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} />
-            </div>
-          )}
+            </div>}
 
           {/* About Section */}
           <div id="about" className="animate-in fade-in-50 duration-700 delay-200 bg-background/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-border">
@@ -172,11 +169,10 @@ const Index = () => {
             <p className="leading-relaxed">
               ✨ AI 智慧解讀 · 傳統與科技結合
             </p>
-            <p className="mt-3 sm:mt-4">© 2023 Master Sun Sky</p>
+            <p className="mt-3 sm:mt-4">© 2025 Master Sun Sky</p>
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
 export default Index;
