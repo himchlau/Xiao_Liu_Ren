@@ -14,6 +14,15 @@ const Index = () => {
   const [interpretation, setInterpretation] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState("");
+  const [aiCategory, setAiCategory] = useState<string>("");
+  const [aiSourceData, setAiSourceData] = useState<{
+    hexagramName: string;
+    fiveElements: string;
+    fortune: string;
+    direction: string;
+    categoryInterpretation: string;
+    coreCharacteristics: string;
+  } | null>(null);
   const {
     toast
   } = useToast();
@@ -27,6 +36,8 @@ const Index = () => {
     setIsLoading(true);
     setInterpretation("");
     setCurrentQuestion(data.question);
+    setAiCategory("");
+    setAiSourceData(null);
     try {
       // 將陽曆轉換為農曆
       const solar = Solar.fromYmd(data.year, data.month, data.day);
@@ -79,6 +90,8 @@ const Index = () => {
       if (error) throw error;
       if (data?.interpretation) {
         setInterpretation(data.interpretation);
+        setAiCategory(data.category || "");
+        setAiSourceData(data.sourceData || null);
       } else {
         throw new Error('未收到有效的解讀結果');
       }
@@ -129,7 +142,12 @@ const Index = () => {
           {/* Results */}
           {result && <div className="space-y-4 sm:space-y-6">
               <DivinationCard result={result} />
-              <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} />
+              <AIInterpretation 
+                interpretation={interpretation} 
+                isLoading={isLoading && !interpretation}
+                category={aiCategory}
+                sourceData={aiSourceData || undefined}
+              />
             </div>}
 
           {/* About Section */}

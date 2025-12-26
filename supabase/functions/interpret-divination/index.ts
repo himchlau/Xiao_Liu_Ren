@@ -241,7 +241,15 @@ CRITICAL REQUIREMENTS:
     return new Response(
       JSON.stringify({ 
         interpretation,
-        category: categoryLabel 
+        category: categoryLabel,
+        sourceData: {
+          hexagramName: resultName,
+          fiveElements: hexagramData["五行"] || "未知",
+          fortune: hexagramData["吉凶"] || resultFortune,
+          direction: hexagramData["方位"] || "未知",
+          categoryInterpretation: categoryInterpretation,
+          coreCharacteristics: hexagramData["核心特質"] || resultDescription
+        }
       }), 
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
