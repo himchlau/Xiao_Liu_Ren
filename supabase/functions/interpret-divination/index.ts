@@ -162,8 +162,7 @@ Fortune Level: ${resultFortune}
 Five Elements: ${hexagramData["五行"] || "未知"}
 Direction: ${hexagramData["方位"] || "未知"}
 
-Question: ${question}
-Question Category: ${categoryLabel}
+User's Question (for context only, DO NOT repeat in response): ${question}
 
 Category-Specific Interpretation from Traditional Text:
 ${categoryInterpretation}
@@ -172,18 +171,20 @@ Additional Reference - Core Characteristics:
 ${hexagramData["核心特質"] || resultDescription}
 
 Please provide:
-1. Explain the meaning of this hexagram (${resultName}) in the context of the question category (${categoryLabel})
-2. Based on the traditional interpretation above, give specific advice for the question
+1. Explain the meaning of this hexagram (${resultName}) and its implications
+2. Based on the traditional interpretation above, give specific advice
 3. Key points to pay attention to and timing considerations
 
 CRITICAL REQUIREMENTS:
+- DO NOT repeat or mention the user's question in your response
+- DO NOT mention or state what category the question belongs to
 - You MUST respond in the SAME LANGUAGE as the question above. If the question is in English, respond in English. If in Japanese, respond in Japanese. If in Chinese, respond in Chinese.
 - Your interpretation MUST be based on the traditional text provided above. Do not make up information.
 - Use MODERN, EVERYDAY LANGUAGE that regular people use in daily conversations. Avoid overly formal or archaic expressions.
 - For ENGLISH responses: Keep it to 200 words maximum.
 - For CHINESE responses: Keep it to 300 characters maximum.
 - Your tone should be warm, friendly, and conversational, like a wise friend giving practical advice.
-- Mention the question category (${categoryLabel}) in your response to show the question was properly classified.`;
+- Jump directly into the interpretation without preamble.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -194,7 +195,7 @@ CRITICAL REQUIREMENTS:
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your interpretations are based on traditional texts and wisdom. You classify questions into 8 categories: 事業財運, 感情婚姻, 健康疾病, 失物方位, 出行吉凶, 簽約談判, 官司訴訟, 家宅平安. If a question does not fit these categories, you use the core characteristics (核心特質) for interpretation. IMPORTANT: Always use modern, everyday language that regular people use in conversations - avoid overly formal or archaic expressions. Be warm and friendly like a wise friend.' },
+          { role: 'system', content: 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your interpretations are based on traditional texts and wisdom. IMPORTANT: Never repeat the user\'s question and never mention the category classification in your response. Always use modern, everyday language that regular people use in conversations - avoid overly formal or archaic expressions. Be warm and friendly like a wise friend. Jump directly into the interpretation.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
