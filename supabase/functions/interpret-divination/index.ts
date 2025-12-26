@@ -93,6 +93,16 @@ const xiaoLiuRenData: Record<string, Record<string, string>> = {
   }
 };
 
+// 英文卦名映射到中文
+const englishToChineseMapping: Record<string, string> = {
+  "Da An (Great Peace)": "大安",
+  "Liu Lian (Delay)": "留連",
+  "Su Xi (Swift Joy)": "速喜",
+  "Chi Kou (Red Mouth)": "赤口",
+  "Xiao Ji (Small Fortune)": "小吉",
+  "Kong Wang (Emptiness)": "空亡"
+};
+
 // 問題分類關鍵詞
 const categoryKeywords: Record<string, string[]> = {
   "事業財運": ["工作", "事業", "財運", "財富", "金錢", "賺錢", "投資", "生意", "職場", "升職", "加薪", "收入", "股票", "創業", "公司", "老闆", "同事", "工資", "薪水", "理財", "買賣", "career", "job", "money", "finance", "investment", "business", "promotion", "salary", "work", "wealth", "income"],
@@ -136,8 +146,12 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
+    // 將英文卦名轉換為中文以查找資料
+    const chineseResultName = englishToChineseMapping[resultName] || resultName;
+    console.log('Chinese hexagram name:', chineseResultName);
+
     // 獲取卦象詳細資料
-    const hexagramData = xiaoLiuRenData[resultName] || {};
+    const hexagramData = xiaoLiuRenData[chineseResultName] || {};
     
     // 分類問題
     const category = classifyQuestion(question);
@@ -243,14 +257,15 @@ CRITICAL REQUIREMENTS:
         interpretation,
         category: categoryLabel,
         sourceData: {
-          hexagramName: resultName,
+          hexagramName: chineseResultName,
+          hexagramNameOriginal: resultName,
           fiveElements: hexagramData["五行"] || "未知",
           fortune: hexagramData["吉凶"] || resultFortune,
           direction: hexagramData["方位"] || "未知",
           categoryInterpretation: categoryInterpretation,
           coreCharacteristics: hexagramData["核心特質"] || resultDescription
         }
-      }), 
+      }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
