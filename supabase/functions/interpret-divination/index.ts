@@ -169,7 +169,9 @@ serve(async (req) => {
       categoryLabel = "核心特質";
     }
 
-    const prompt = `You are a master of Xiao Liu Ren divination. Based on the following information, provide a professional and wise interpretation.
+    const systemPrompt = 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your interpretations are based on traditional texts and wisdom. IMPORTANT: Never repeat the user\'s question and never mention the category classification in your response. Always use modern, everyday language that regular people use in conversations - avoid overly formal or archaic expressions. Be warm and friendly like a wise friend. Jump directly into the interpretation.';
+
+    const userPrompt = `You are a master of Xiao Liu Ren divination. Based on the following information, provide a professional and wise interpretation.
 
 Divination Result: ${resultName}
 Fortune Level: ${resultFortune}
@@ -209,8 +211,8 @@ CRITICAL REQUIREMENTS:
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',
         messages: [
-          { role: 'system', content: 'You are a wise 50-year-old master of traditional Chinese divination, specializing in Xiao Liu Ren. Your interpretations are based on traditional texts and wisdom. IMPORTANT: Never repeat the user\'s question and never mention the category classification in your response. Always use modern, everyday language that regular people use in conversations - avoid overly formal or archaic expressions. Be warm and friendly like a wise friend. Jump directly into the interpretation.' },
-          { role: 'user', content: prompt }
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
         ],
         temperature: 0.7,
         max_tokens: 600,
@@ -264,6 +266,10 @@ CRITICAL REQUIREMENTS:
           direction: hexagramData["方位"] || "未知",
           categoryInterpretation: categoryInterpretation,
           coreCharacteristics: hexagramData["核心特質"] || resultDescription
+        },
+        prompt: {
+          system: systemPrompt,
+          user: userPrompt
         }
       }),
       { 

@@ -23,6 +23,10 @@ const Index = () => {
     categoryInterpretation: string;
     coreCharacteristics: string;
   } | null>(null);
+  const [aiPrompt, setAiPrompt] = useState<{
+    system: string;
+    user: string;
+  } | null>(null);
   const {
     toast
   } = useToast();
@@ -38,6 +42,7 @@ const Index = () => {
     setCurrentQuestion(data.question);
     setAiCategory("");
     setAiSourceData(null);
+    setAiPrompt(null);
     try {
       // 將陽曆轉換為農曆
       const solar = Solar.fromYmd(data.year, data.month, data.day);
@@ -92,6 +97,7 @@ const Index = () => {
         setInterpretation(data.interpretation);
         setAiCategory(data.category || "");
         setAiSourceData(data.sourceData || null);
+        setAiPrompt(data.prompt || null);
       } else {
         throw new Error('未收到有效的解讀結果');
       }
@@ -147,6 +153,7 @@ const Index = () => {
                 isLoading={isLoading && !interpretation}
                 category={aiCategory}
                 sourceData={aiSourceData || undefined}
+                prompt={aiPrompt || undefined}
               />
             </div>}
 
