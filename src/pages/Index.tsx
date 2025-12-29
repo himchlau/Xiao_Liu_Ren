@@ -132,7 +132,7 @@ const Index = () => {
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-jade/70 via-gold/80 to-cinnabar/70 bg-clip-text text-white/45">
               小六壬占卜系統
             </h1>
-            <p className="text-white text-base sm:text-lg leading-relaxed">Traditional Wisdom × AI Interpretation · Personalize Suggestions, Your Choice</p>
+            <p className="text-white text-base sm:text-lg leading-relaxed">Traditional Wisdom × Personalize Interpretation · Punctual Suggestions, Your Choice</p>
             <p className="text-white text-sm sm:text-base leading-relaxed">傳統智慧 × AI 解讀 · 貼身提議，供你選擇</p>
           </div>
 
