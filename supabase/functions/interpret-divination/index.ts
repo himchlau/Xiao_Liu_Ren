@@ -103,31 +103,73 @@ const englishToChineseMapping: Record<string, string> = {
   "Kong Wang (Emptiness)": "空亡"
 };
 
-// 問題分類關鍵詞
-const categoryKeywords: Record<string, string[]> = {
-  "事業財運": ["工作", "事業", "財運", "財富", "金錢", "賺錢", "投資", "生意", "職場", "升職", "加薪", "收入", "股票", "創業", "公司", "老闆", "同事", "工資", "薪水", "理財", "買賣", "career", "job", "money", "finance", "investment", "business", "promotion", "salary", "work", "wealth", "income"],
-  "感情婚姻": ["感情", "愛情", "婚姻", "結婚", "戀愛", "對象", "伴侶", "男友", "女友", "老公", "老婆", "丈夫", "妻子", "分手", "復合", "桃花", "相親", "約會", "追求", "暗戀", "love", "relationship", "marriage", "dating", "boyfriend", "girlfriend", "husband", "wife", "romance", "breakup"],
-  "健康疾病": ["健康", "疾病", "生病", "身體", "醫院", "看病", "檢查", "手術", "康復", "痊癒", "病情", "治療", "藥物", "症狀", "體檢", "health", "health check", "checkup", "check-up", "physical", "illness", "disease", "sick", "hospital", "doctor", "medical", "surgery", "recovery", "treatment", "wellness", "condition", "exam", "examination"],
-  "失物方位": ["丟失", "遺失", "找東西", "失物", "丟東西", "找回", "尋找", "不見", "找不到", "遺落", "掉了", "lost", "find", "missing", "where", "locate", "search"],
-  "出行吉凶": ["出行", "旅行", "出門", "外出", "旅遊", "出差", "搬家", "移居", "遷移", "飛機", "坐車", "交通", "travel", "trip", "journey", "move", "relocate", "flight", "vacation", "abroad"],
-  "簽約談判": ["簽約", "合同", "協議", "談判", "合作", "條款", "契約", "合夥", "協商", "洽談", "contract", "sign", "agreement", "negotiate", "deal", "partnership", "terms"],
-  "官司訴訟": ["官司", "訴訟", "法院", "律師", "法律", "糾紛", "起訴", "被告", "原告", "判決", "lawsuit", "court", "legal", "lawyer", "sue", "case", "judge", "trial"],
-  "家宅平安": ["家宅", "房子", "住宅", "家庭", "家人", "風水", "房屋", "裝修", "搬遷", "租房", "買房", "home", "house", "family", "feng shui", "residence", "property", "apartment"]
-};
+// 有效的問題分類
+const VALID_CATEGORIES = [
+  "事業財運",
+  "感情婚姻", 
+  "健康疾病",
+  "失物方位",
+  "出行吉凶",
+  "簽約談判",
+  "官司訴訟",
+  "家宅平安"
+];
 
-// 分類問題
-function classifyQuestion(question: string): string | null {
-  const lowerQuestion = question.toLowerCase();
-  
-  for (const [category, keywords] of Object.entries(categoryKeywords)) {
-    for (const keyword of keywords) {
-      if (lowerQuestion.includes(keyword.toLowerCase())) {
-        return category;
-      }
+// 使用 AI 分類問題
+async function classifyQuestionWithAI(question: string, apiKey: string): Promise<string> {
+  const classificationPrompt = `You are a question classifier for Chinese divination. Analyze the user's question and classify it into ONE of these categories:
+
+1. 事業財運 - Career, job, money, finance, investment, business, promotion, salary, income, wealth
+2. 感情婚姻 - Love, relationship, marriage, dating, romance, partner, spouse, breakup
+3. 健康疾病 - Health, illness, disease, medical, hospital, doctor, surgery, physical condition, checkup, wellness
+4. 失物方位 - Lost items, finding things, missing objects, locating belongings
+5. 出行吉凶 - Travel, trip, journey, moving, relocation, transportation, vacation
+6. 簽約談判 - Contracts, agreements, negotiations, deals, partnerships, signing documents
+7. 官司訴訟 - Lawsuits, legal matters, court, lawyers, disputes, litigation
+8. 家宅平安 - Home, house, family, feng shui, residence, property, living situation
+
+User's question: "${question}"
+
+IMPORTANT: 
+- Respond with ONLY the category name in Chinese (e.g., "健康疾病")
+- If the question doesn't clearly fit any category, respond with "核心特質"
+- Do not add any explanation or other text`;
+
+  try {
+    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash-lite',
+        messages: [
+          { role: 'user', content: classificationPrompt }
+        ],
+        temperature: 0.1,
+        max_tokens: 20,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Classification API error:', response.status);
+      return "核心特質";
     }
+
+    const data = await response.json();
+    const result = data.choices?.[0]?.message?.content?.trim() || "核心特質";
+    
+    // Validate the result is a valid category
+    if (VALID_CATEGORIES.includes(result)) {
+      return result;
+    }
+    
+    return "核心特質";
+  } catch (error) {
+    console.error('Error classifying question:', error);
+    return "核心特質";
   }
-  
-  return null; // 無法歸類，使用核心特質
 }
 
 serve(async (req) => {
@@ -153,17 +195,16 @@ serve(async (req) => {
     // 獲取卦象詳細資料
     const hexagramData = xiaoLiuRenData[chineseResultName] || {};
     
-    // 分類問題
-    const category = classifyQuestion(question);
-    console.log('Question category:', category || '核心特質');
+    // 使用 AI 分類問題
+    const category = await classifyQuestionWithAI(question, LOVABLE_API_KEY);
+    console.log('AI classified question category:', category);
 
     // 構建解讀資料
     let categoryInterpretation = "";
-    let categoryLabel = "";
+    let categoryLabel = category;
     
-    if (category && hexagramData[category]) {
+    if (category !== "核心特質" && hexagramData[category]) {
       categoryInterpretation = hexagramData[category];
-      categoryLabel = category;
     } else {
       categoryInterpretation = hexagramData["核心特質"] || resultDescription;
       categoryLabel = "核心特質";
