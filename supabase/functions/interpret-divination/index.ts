@@ -107,7 +107,7 @@ const englishToChineseMapping: Record<string, string> = {
 const categoryKeywords: Record<string, string[]> = {
   "事業財運": ["工作", "事業", "財運", "財富", "金錢", "賺錢", "投資", "生意", "職場", "升職", "加薪", "收入", "股票", "創業", "公司", "老闆", "同事", "工資", "薪水", "理財", "買賣", "career", "job", "money", "finance", "investment", "business", "promotion", "salary", "work", "wealth", "income"],
   "感情婚姻": ["感情", "愛情", "婚姻", "結婚", "戀愛", "對象", "伴侶", "男友", "女友", "老公", "老婆", "丈夫", "妻子", "分手", "復合", "桃花", "相親", "約會", "追求", "暗戀", "love", "relationship", "marriage", "dating", "boyfriend", "girlfriend", "husband", "wife", "romance", "breakup"],
-  "健康疾病": ["健康", "疾病", "生病", "身體", "醫院", "看病", "檢查", "手術", "康復", "痊癒", "病情", "治療", "藥物", "症狀", "health", "illness", "disease", "sick", "hospital", "doctor", "medical", "surgery", "recovery", "treatment"],
+  "健康疾病": ["健康", "疾病", "生病", "身體", "醫院", "看病", "檢查", "手術", "康復", "痊癒", "病情", "治療", "藥物", "症狀", "體檢", "health", "health check", "checkup", "check-up", "physical", "illness", "disease", "sick", "hospital", "doctor", "medical", "surgery", "recovery", "treatment", "wellness", "condition", "exam", "examination"],
   "失物方位": ["丟失", "遺失", "找東西", "失物", "丟東西", "找回", "尋找", "不見", "找不到", "遺落", "掉了", "lost", "find", "missing", "where", "locate", "search"],
   "出行吉凶": ["出行", "旅行", "出門", "外出", "旅遊", "出差", "搬家", "移居", "遷移", "飛機", "坐車", "交通", "travel", "trip", "journey", "move", "relocate", "flight", "vacation", "abroad"],
   "簽約談判": ["簽約", "合同", "協議", "談判", "合作", "條款", "契約", "合夥", "協商", "洽談", "contract", "sign", "agreement", "negotiate", "deal", "partnership", "terms"],
