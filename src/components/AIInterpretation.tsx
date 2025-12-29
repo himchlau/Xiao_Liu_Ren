@@ -13,15 +13,22 @@ interface SourceData {
   coreCharacteristics: string;
 }
 
+interface PromptData {
+  system: string;
+  user: string;
+}
+
 interface AIInterpretationProps {
   interpretation: string;
   isLoading?: boolean;
   category?: string;
   sourceData?: SourceData;
+  prompt?: PromptData;
 }
 
-export function AIInterpretation({ interpretation, isLoading, category, sourceData }: AIInterpretationProps) {
+export function AIInterpretation({ interpretation, isLoading, category, sourceData, prompt }: AIInterpretationProps) {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isPromptOpen, setIsPromptOpen] = useState(false);
 
   return (
     <Card className="p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-divine border-gold/30 bg-gradient-to-br from-card to-gold/5">
@@ -98,6 +105,52 @@ export function AIInterpretation({ interpretation, isLoading, category, sourceDa
               <div className="pt-2 border-t border-border/30">
                 <p className="font-medium text-foreground mb-1">核心特質：</p>
                 <p className="text-muted-foreground leading-relaxed">{sourceData.coreCharacteristics}</p>
+              </div>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+
+      {/* AI Prompt Section - Collapsible */}
+      {!isLoading && prompt && (
+        <Collapsible open={isPromptOpen} onOpenChange={setIsPromptOpen}>
+          <CollapsibleTrigger className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-full justify-center py-2 border-t border-dashed border-border/50">
+            {isPromptOpen ? (
+              <>
+                <ChevronUp className="w-3 h-3" />
+                <span>隱藏 AI Prompt</span>
+              </>
+            ) : (
+              <>
+                <ChevronDown className="w-3 h-3" />
+                <span>查看完整 AI Prompt</span>
+              </>
+            )}
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-3">
+            <div className="bg-muted/30 rounded-lg p-3 space-y-3 text-xs border border-border/30">
+              <div>
+                <p className="font-medium text-foreground mb-1 flex items-center gap-1">
+                  <Badge variant="outline" className="text-xs bg-cinnabar/10 text-cinnabar border-cinnabar/30">
+                    System
+                  </Badge>
+                  <span>系統提示詞</span>
+                </p>
+                <pre className="text-muted-foreground leading-relaxed whitespace-pre-wrap bg-background/50 p-2 rounded border border-border/20 overflow-x-auto">
+                  {prompt.system}
+                </pre>
+              </div>
+
+              <div>
+                <p className="font-medium text-foreground mb-1 flex items-center gap-1">
+                  <Badge variant="outline" className="text-xs bg-jade/10 text-jade border-jade/30">
+                    User
+                  </Badge>
+                  <span>用戶提示詞</span>
+                </p>
+                <pre className="text-muted-foreground leading-relaxed whitespace-pre-wrap bg-background/50 p-2 rounded border border-border/20 overflow-x-auto">
+                  {prompt.user}
+                </pre>
               </div>
             </div>
           </CollapsibleContent>
