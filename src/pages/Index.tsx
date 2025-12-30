@@ -133,7 +133,7 @@ const Index = () => {
               小六壬占卜系統
             </h1>
             <p className="text-white text-base sm:text-lg leading-relaxed">Traditional Wisdom × Personalize Interpretation · Punctual Suggestions, Your Choice</p>
-            <p className="text-white text-sm sm:text-base leading-relaxed">傳統智慧 × AI 解讀 · 貼身提議，供你選擇</p>
+            <p className="text-white text-sm sm:text-base leading-relaxed">傳統智慧 × 貼身解讀 · 精確提議，你的選擇</p>
           </div>
 
           {/* Divination Form */}
@@ -153,7 +153,7 @@ const Index = () => {
               關於小六壬 / About Xiao Liu Ren
             </h3>
             <div className="space-y-2 text-sm sm:text-base text-foreground/90">
-              <p>小六壬是中國傳統占卜術之一，相傳源於三國時期傳奇軍師諸葛亮，以快速靈驗著稱。通過時間（月、日、時辰）推算六神位置，預測吉凶。</p>
+              <p>小六壬是中國傳統占卜術之一，相傳源於三國時期(AD220–AD280)傳奇軍師諸葛亮，以快速靈驗著稱。通過時間（月、日、時辰）推算六神位置，預測吉凶。</p>
               <p>Xiao Liu Ren is a traditional Chinese divination method, believed to originate from the legendary strategic advisor Zhuge Liang during the Three Kingdoms period(AD220–AD280). Known for being quick in providing insights, it calculates the positions of six deities based on time (month, day, hour) to predict fortune and misfortune.</p>
             </div>
           </div>
