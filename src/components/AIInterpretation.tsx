@@ -4,15 +4,6 @@ import { Sparkles, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-interface SourceData {
-  hexagramName: string;
-  fiveElements: string;
-  fortune: string;
-  direction: string;
-  categoryInterpretation: string;
-  coreCharacteristics: string;
-}
-
 interface PromptData {
   system: string;
   user: string;
@@ -21,13 +12,10 @@ interface PromptData {
 interface AIInterpretationProps {
   interpretation: string;
   isLoading?: boolean;
-  category?: string;
-  sourceData?: SourceData;
   prompt?: PromptData;
 }
 
-export function AIInterpretation({ interpretation, isLoading, category, sourceData, prompt }: AIInterpretationProps) {
-  const [isReviewOpen, setIsReviewOpen] = useState(false);
+export function AIInterpretation({ interpretation, isLoading, prompt }: AIInterpretationProps) {
   const [isPromptOpen, setIsPromptOpen] = useState(false);
 
   return (
@@ -51,64 +39,6 @@ export function AIInterpretation({ interpretation, isLoading, category, sourceDa
             {interpretation}
           </p>
         </div>
-      )}
-
-      {/* Review Section - Collapsible */}
-      {!isLoading && category && sourceData && (
-        <Collapsible open={isReviewOpen} onOpenChange={setIsReviewOpen}>
-          <CollapsibleTrigger className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-full justify-center py-2 border-t border-dashed border-border/50">
-            {isReviewOpen ? (
-              <>
-                <ChevronUp className="w-3 h-3" />
-                <span>隱藏解讀依據</span>
-              </>
-            ) : (
-              <>
-                <ChevronDown className="w-3 h-3" />
-                <span>查看解讀依據 (Review)</span>
-              </>
-            )}
-          </CollapsibleTrigger>
-          <CollapsibleContent className="mt-3">
-            <div className="bg-muted/30 rounded-lg p-3 space-y-2 text-xs border border-border/30">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="text-xs bg-jade/10 text-jade border-jade/30">
-                  {category}
-                </Badge>
-                <span className="text-muted-foreground">問題分類</span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                <div>
-                  <span className="font-medium text-foreground">卦象：</span>
-                  {sourceData.hexagramName}
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">五行：</span>
-                  {sourceData.fiveElements}
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">吉凶：</span>
-                  {sourceData.fortune}
-                </div>
-                <div>
-                  <span className="font-medium text-foreground">方位：</span>
-                  {sourceData.direction}
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-border/30">
-                <p className="font-medium text-foreground mb-1">分類解讀依據：</p>
-                <p className="text-muted-foreground leading-relaxed">{sourceData.categoryInterpretation}</p>
-              </div>
-
-              <div className="pt-2 border-t border-border/30">
-                <p className="font-medium text-foreground mb-1">核心特質：</p>
-                <p className="text-muted-foreground leading-relaxed">{sourceData.coreCharacteristics}</p>
-              </div>
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
       )}
 
       {/* AI Prompt Section - Collapsible */}

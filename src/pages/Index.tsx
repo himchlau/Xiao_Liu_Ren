@@ -144,7 +144,7 @@ const Index = () => {
           {/* Results */}
           {result && <div className="space-y-4 sm:space-y-6">
               <DivinationCard result={result} />
-              <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} category={aiCategory} sourceData={aiSourceData || undefined} prompt={aiPrompt || undefined} />
+              <AIInterpretation interpretation={interpretation} isLoading={isLoading && !interpretation} prompt={aiPrompt || undefined} />
             </div>}
 
           {/* About Section */}
