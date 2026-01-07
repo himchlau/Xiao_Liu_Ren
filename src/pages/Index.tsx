@@ -133,7 +133,7 @@ const Index = () => {
               小六壬占卜系統
             </h1>
             <p className="text-white text-base sm:text-lg leading-relaxed">Traditional Wisdom × Personalize Interpretation · Punctual Suggestions, Your Choice</p>
-            <p className="text-white text-sm sm:text-base leading-relaxed">傳統智慧 × 貼身解讀 · 精確提議，你的選擇</p>
+            <p className="text-white text-sm sm:text-base leading-relaxed">傳統智慧 × 貼身解讀 · 精確提議，讓你選擇</p>
           </div>
 
           {/* Divination Form */}
