@@ -1,12 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { DivinationResult } from "@/lib/xiaoliu";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DivinationCardProps {
   result: DivinationResult;
 }
 
 export function DivinationCard({ result }: DivinationCardProps) {
+  const { t } = useLanguage();
+  
   const colorClass = {
     jade: "bg-jade text-white",
     cinnabar: "bg-cinnabar text-white",
@@ -16,9 +19,9 @@ export function DivinationCard({ result }: DivinationCardProps) {
     amber: "bg-amber-600 text-white",
   }[result.color] || "bg-primary text-primary-foreground";
 
-  const fortuneColor = result.fortune.includes("大吉") 
+  const fortuneColor = result.fortune.includes("大吉") || result.fortune.includes("Great")
     ? "bg-jade text-white" 
-    : result.fortune.includes("吉") 
+    : result.fortune.includes("吉") || result.fortune.includes("Good")
     ? "bg-gold text-foreground"
     : "bg-destructive text-destructive-foreground";
 
@@ -40,7 +43,7 @@ export function DivinationCard({ result }: DivinationCardProps) {
       </div>
 
       <div className="pt-1 sm:pt-2 text-xs sm:text-sm text-muted-foreground">
-        <p>位置：第 {result.position} 位</p>
+        <p>{t("位置", "Position")}：{t("第", "")} {result.position} {t("位", "")}</p>
       </div>
     </Card>
   );

@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Mail } from "lucide-react";
 import { z } from "zod";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Email validation schema
 const emailSchema = z.string()
@@ -22,6 +23,7 @@ export const EmailSubscribe = () => {
   const [honeypot, setHoneypot] = useState(""); // Honeypot field - should remain empty
   const lastSubmitRef = useRef<number>(0);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +32,8 @@ export const EmailSubscribe = () => {
     if (honeypot) {
       // Pretend success to confuse bots
       toast({
-        title: "訂閱成功！",
-        description: "感謝您的訂閱 / Thank you for subscribing!",
+        title: t("訂閱成功！", "Subscribed!"),
+        description: t("感謝您的訂閱", "Thank you for subscribing!"),
       });
       setEmail("");
       return;
@@ -41,8 +43,8 @@ export const EmailSubscribe = () => {
     const now = Date.now();
     if (now - lastSubmitRef.current < RATE_LIMIT_MS) {
       toast({
-        title: "請稍後再試",
-        description: "Please wait a moment before trying again",
+        title: t("請稍後再試", "Please wait"),
+        description: t("請稍後再試", "Please wait a moment before trying again"),
         variant: "destructive",
       });
       return;
@@ -52,7 +54,7 @@ export const EmailSubscribe = () => {
     const validation = emailSchema.safeParse(email);
     if (!validation.success) {
       toast({
-        title: "請輸入有效的電子郵件",
+        title: t("請輸入有效的電子郵件", "Please enter a valid email"),
         description: validation.error.errors[0]?.message || "Invalid email",
         variant: "destructive",
       });
@@ -70,8 +72,8 @@ export const EmailSubscribe = () => {
       if (error) {
         if (error.code === "23505") {
           toast({
-            title: "此電子郵件已訂閱",
-            description: "This email is already subscribed",
+            title: t("此電子郵件已訂閱", "Already subscribed"),
+            description: t("此電子郵件已訂閱", "This email is already subscribed"),
             variant: "destructive",
           });
         } else {
@@ -79,16 +81,16 @@ export const EmailSubscribe = () => {
         }
       } else {
         toast({
-          title: "訂閱成功！",
-          description: "感謝您的訂閱 / Thank you for subscribing!",
+          title: t("訂閱成功！", "Subscribed!"),
+          description: t("感謝您的訂閱", "Thank you for subscribing!"),
         });
         setEmail("");
       }
     } catch (error) {
       console.error("Subscription failed");
       toast({
-        title: "訂閱失敗",
-        description: "請稍後再試 / Please try again later",
+        title: t("訂閱失敗", "Subscription failed"),
+        description: t("請稍後再試", "Please try again later"),
         variant: "destructive",
       });
     } finally {
@@ -103,10 +105,10 @@ export const EmailSubscribe = () => {
           <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
         </div>
         <h3 className="text-lg sm:text-xl font-semibold text-foreground">
-          訂閱占卜通訊
+          {t("訂閱占卜通訊", "Subscribe to Updates")}
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground px-2">
-          Subscribe for divination updates and insights
+          {t("獲取占卜更新和見解", "Get divination updates and insights")}
         </p>
       </div>
       
@@ -139,7 +141,7 @@ export const EmailSubscribe = () => {
           maxLength={255}
         />
         <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-sm sm:text-base">
-          {isLoading ? "訂閱中..." : "訂閱"}
+          {isLoading ? t("訂閱中...", "Subscribing...") : t("訂閱", "Subscribe")}
         </Button>
       </form>
     </div>
