@@ -5,6 +5,61 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// In-memory rate limiting store (resets on function cold start)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_MAX_REQUESTS = 10; // Max requests per window
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute window
+
+function getClientIP(req: Request): string {
+  // Try various headers that might contain the real IP
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    return forwardedFor.split(',')[0].trim();
+  }
+  const realIP = req.headers.get('x-real-ip');
+  if (realIP) {
+    return realIP;
+  }
+  // Fallback to a hash of user-agent + accept-language as fingerprint
+  const userAgent = req.headers.get('user-agent') || 'unknown';
+  const acceptLang = req.headers.get('accept-language') || 'unknown';
+  return `fingerprint-${userAgent.substring(0, 50)}-${acceptLang.substring(0, 20)}`;
+}
+
+function checkRateLimit(clientId: string): { allowed: boolean; remaining: number; resetIn: number } {
+  const now = Date.now();
+  const record = rateLimitStore.get(clientId);
+  
+  // Clean up expired entries periodically
+  if (rateLimitStore.size > 1000) {
+    for (const [key, value] of rateLimitStore.entries()) {
+      if (now > value.resetTime) {
+        rateLimitStore.delete(key);
+      }
+    }
+  }
+  
+  if (!record || now > record.resetTime) {
+    // New window
+    rateLimitStore.set(clientId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetIn: RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { allowed: false, remaining: 0, resetIn: record.resetTime - now };
+  }
+  
+  record.count++;
+  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - record.count, resetIn: record.resetTime - now };
+}
+
+// Valid hexagram names for input validation
+const VALID_HEXAGRAM_NAMES = [
+  "大安", "留連", "速喜", "赤口", "小吉", "空亡",
+  "Da An (Great Peace)", "Liu Lian (Delay)", "Su Xi (Swift Joy)", 
+  "Chi Kou (Red Mouth)", "Xiao Ji (Small Fortune)", "Kong Wang (Emptiness)"
+];
+
 // 小六壬詳細解讀資料
 const xiaoLiuRenData: Record<string, Record<string, string>> = {
   "大安": {
@@ -178,10 +233,72 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Rate limiting check
+  const clientId = getClientIP(req);
+  const rateLimit = checkRateLimit(clientId);
+  
+  if (!rateLimit.allowed) {
+    console.warn(`Rate limit exceeded for client: ${clientId}`);
+    return new Response(
+      JSON.stringify({ error: '請求過於頻繁，請稍後再試。(Too many requests, please try again later.)' }),
+      {
+        status: 429,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+          'Retry-After': String(Math.ceil(rateLimit.resetIn / 1000)),
+          'X-RateLimit-Remaining': '0',
+        }
+      }
+    );
+  }
+
   try {
-    const { resultName, resultDescription, resultFortune, question } = await req.json();
+    // Parse and validate request body
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: 'Invalid request format' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { resultName, resultDescription, resultFortune, question } = body;
     
-    console.log('Interpreting divination:', { resultName, question });
+    // Input validation
+    if (!resultName || typeof resultName !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Missing or invalid resultName' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    if (!VALID_HEXAGRAM_NAMES.includes(resultName)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid hexagram name' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    if (!question || typeof question !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Missing or invalid question' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Limit question length to prevent abuse
+    const sanitizedQuestion = question.slice(0, 500).trim();
+    if (sanitizedQuestion.length === 0) {
+      return new Response(
+        JSON.stringify({ error: 'Question cannot be empty' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    console.log('Interpreting divination:', { resultName, questionLength: sanitizedQuestion.length });
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -196,7 +313,7 @@ serve(async (req) => {
     const hexagramData = xiaoLiuRenData[chineseResultName] || {};
     
     // 使用 AI 分類問題
-    const category = await classifyQuestionWithAI(question, LOVABLE_API_KEY);
+    const category = await classifyQuestionWithAI(sanitizedQuestion, LOVABLE_API_KEY);
     console.log('AI classified question category:', category);
 
     // 構建解讀資料
@@ -214,7 +331,7 @@ serve(async (req) => {
 
     const userPrompt = `You are a master of Xiao Liu Ren divination. The user has asked a specific question and received a hexagram. Your job is to DIRECTLY ANSWER their question using the hexagram's wisdom.
 
-USER'S QUESTION: ${question}
+USER'S QUESTION: ${sanitizedQuestion}
 
 HEXAGRAM RESULT:
 - Name: ${resultName}
@@ -310,14 +427,15 @@ REQUIREMENTS:
           direction: hexagramData["方位"] || "未知",
           categoryInterpretation: categoryInterpretation,
           coreCharacteristics: hexagramData["核心特質"] || resultDescription
-        },
-        prompt: {
-          system: systemPrompt,
-          user: userPrompt
         }
+        // Note: Prompts removed from response for security
       }),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json',
+          'X-RateLimit-Remaining': String(rateLimit.remaining),
+        } 
       }
     );
 
