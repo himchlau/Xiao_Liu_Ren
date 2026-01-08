@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,24 +25,54 @@ const emailSchema = z.object({
     .min(1, { message: "Email is required / 請輸入電子郵件" })
     .email({ message: "Invalid email address / 無效的電子郵件地址" })
     .max(255, { message: "Email must be less than 255 characters / 電子郵件必須少於255個字符" }),
+  // Honeypot field - should always be empty
+  website: z.string().max(0).optional(),
 });
+
+// Rate limiting: track last submission time
+const RATE_LIMIT_MS = 10000; // 10 seconds between submissions
 
 const Welcome = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const lastSubmitRef = useRef<number>(0);
   
   const form = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
       email: "",
+      website: "", // Honeypot
     },
   });
 
   const handleSubmit = async (values: z.infer<typeof emailSchema>) => {
+    // Honeypot check - if filled, silently redirect (bot detected)
+    if (values.website && values.website.length > 0) {
+      // Pretend success to confuse bots
+      toast({
+        title: "Welcome!",
+        description: "Your email has been saved successfully.",
+      });
+      navigate("/divination");
+      return;
+    }
+
+    // Client-side rate limiting
+    const now = Date.now();
+    if (now - lastSubmitRef.current < RATE_LIMIT_MS) {
+      toast({
+        title: "Please wait",
+        description: "Please wait a moment before trying again / 請稍後再試",
+        variant: "destructive",
+      });
+      return;
+    }
+    lastSubmitRef.current = now;
+
     try {
       const { error } = await supabase
         .from("email_subscribers")
-        .insert([{ email: values.email }]);
+        .insert([{ email: values.email.toLowerCase() }]);
 
       if (error) {
         if (error.code === "23505") {
@@ -61,6 +92,7 @@ const Welcome = () => {
 
       navigate("/divination");
     } catch (error) {
+      console.error("Email submission failed");
       toast({
         title: "Error",
         description: "Failed to save email. Please try again.",
@@ -98,6 +130,36 @@ const Welcome = () => {
         <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+              {/* Honeypot field - hidden from real users */}
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  left: '-9999px', 
+                  opacity: 0, 
+                  height: 0,
+                  width: 0,
+                  overflow: 'hidden'
+                }}
+                aria-hidden="true"
+              >
+                <FormField
+                  control={form.control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          tabIndex={-1}
+                          autoComplete="off"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <FormField
                 control={form.control}
                 name="email"
@@ -113,6 +175,7 @@ const Welcome = () => {
                         type="email"
                         placeholder="your.email@example.com"
                         className="text-base"
+                        maxLength={255}
                         {...field}
                       />
                     </FormControl>
