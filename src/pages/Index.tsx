@@ -169,8 +169,12 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-background border-t">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-          {/* Email Subscribe */}
-          <EmailSubscribe />
+          {/* Email Divination Results */}
+          <EmailSubscribe 
+            divinationResult={result}
+            interpretation={interpretation}
+            question={currentQuestion}
+          />
 
           {/* Copyright & Info */}
           <div className="text-center text-xs sm:text-sm text-muted-foreground pt-4 border-t">

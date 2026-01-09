@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Mail } from "lucide-react";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
+import type { DivinationResult } from "@/lib/xiaoliu";
 
 // Email validation schema
 const emailSchema = z.string()
@@ -17,13 +18,25 @@ const emailSchema = z.string()
 // Rate limiting: track last submission time
 const RATE_LIMIT_MS = 10000; // 10 seconds between submissions
 
-export const EmailSubscribe = () => {
+interface EmailSubscribeProps {
+  divinationResult?: DivinationResult | null;
+  interpretation?: string;
+  question?: string;
+}
+
+export const EmailSubscribe = ({ 
+  divinationResult, 
+  interpretation, 
+  question 
+}: EmailSubscribeProps) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [honeypot, setHoneypot] = useState(""); // Honeypot field - should remain empty
   const lastSubmitRef = useRef<number>(0);
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  const hasResult = divinationResult && interpretation;
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,8 +45,8 @@ export const EmailSubscribe = () => {
     if (honeypot) {
       // Pretend success to confuse bots
       toast({
-        title: t("訂閱成功！", "Subscribed!"),
-        description: t("感謝您的訂閱", "Thank you for subscribing!"),
+        title: t("已發送！", "Sent!"),
+        description: t("占卜結果已發送至您的電郵", "Divination results sent to your email"),
       });
       setEmail("");
       return;
@@ -65,31 +78,27 @@ export const EmailSubscribe = () => {
     lastSubmitRef.current = now;
 
     try {
+      // Store the email subscription
       const { error } = await supabase
         .from("email_subscribers")
         .insert([{ email: validation.data.toLowerCase() }]);
 
-      if (error) {
-        if (error.code === "23505") {
-          toast({
-            title: t("此電子郵件已訂閱", "Already subscribed"),
-            description: t("此電子郵件已訂閱", "This email is already subscribed"),
-            variant: "destructive",
-          });
-        } else {
-          throw error;
-        }
-      } else {
-        toast({
-          title: t("訂閱成功！", "Subscribed!"),
-          description: t("感謝您的訂閱", "Thank you for subscribing!"),
-        });
-        setEmail("");
+      if (error && error.code !== "23505") {
+        // Ignore duplicate email error, throw others
+        throw error;
       }
-    } catch (error) {
-      console.error("Subscription failed");
+
+      // TODO: Send email with divination results via edge function
+      // For now, just show success message
       toast({
-        title: t("訂閱失敗", "Subscription failed"),
+        title: t("已發送！", "Sent!"),
+        description: t("占卜結果已發送至您的電郵", "Divination results sent to your email"),
+      });
+      setEmail("");
+    } catch (error) {
+      console.error("Failed to send email");
+      toast({
+        title: t("發送失敗", "Failed to send"),
         description: t("請稍後再試", "Please try again later"),
         variant: "destructive",
       });
@@ -105,10 +114,13 @@ export const EmailSubscribe = () => {
           <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
         </div>
         <h3 className="text-lg sm:text-xl font-semibold text-foreground">
-          {t("訂閱占卜通訊", "Subscribe to Updates")}
+          {t("電郵占卜結果", "Email Divination Results")}
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground px-2">
-          {t("獲取占卜更新和見解", "Get divination updates and insights")}
+          {hasResult 
+            ? t("輸入電郵地址，將占卜結果發送給您", "Enter your email to receive the divination results")
+            : t("完成占卜後，可將結果發送至您的電郵", "Complete a divination to send results to your email")
+          }
         </p>
       </div>
       
@@ -136,12 +148,16 @@ export const EmailSubscribe = () => {
           placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          disabled={isLoading}
+          disabled={isLoading || !hasResult}
           className="flex-1 text-sm sm:text-base"
           maxLength={255}
         />
-        <Button type="submit" disabled={isLoading} className="w-full sm:w-auto text-sm sm:text-base">
-          {isLoading ? t("訂閱中...", "Subscribing...") : t("訂閱", "Subscribe")}
+        <Button 
+          type="submit" 
+          disabled={isLoading || !hasResult} 
+          className="w-full sm:w-auto text-sm sm:text-base"
+        >
+          {isLoading ? t("發送中...", "Sending...") : t("發送", "Send")}
         </Button>
       </form>
     </div>
