@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail } from "lucide-react";
+
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { DivinationResult } from "@/lib/xiaoliu";
@@ -35,8 +35,6 @@ export const EmailSubscribe = ({
   const lastSubmitRef = useRef<number>(0);
   const { toast } = useToast();
   const { t } = useLanguage();
-
-  const hasResult = divinationResult && interpretation;
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,21 +106,13 @@ export const EmailSubscribe = ({
   };
 
   return (
-    <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-border shadow-lg">
-      <div className="text-center space-y-2 sm:space-y-3 mb-3 sm:mb-4">
-        <div className="flex justify-center">
-          <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-        </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-foreground">
-          {t("電郵占卜結果", "Email Divination Results")}
-        </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground px-2">
-          {hasResult 
-            ? t("輸入電郵地址，將占卜結果發送給您", "Enter your email to receive the divination results")
-            : t("完成占卜後，可將結果發送至您的電郵", "Complete a divination to send results to your email")
-          }
-        </p>
-      </div>
+    <div className="animate-in fade-in-50 duration-700 bg-background/80 backdrop-blur-sm rounded-lg p-4 sm:p-6 border border-border">
+      <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-3 sm:mb-4">
+        {t("電郵占卜結果", "Email Divination Results")}
+      </h3>
+      <p className="text-sm sm:text-base text-foreground/90 mb-4">
+        {t("輸入電郵地址，將占卜結果發送給您", "Enter your email to receive the divination results")}
+      </p>
       
       <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
         {/* Honeypot field - hidden from real users, bots will fill it */}
@@ -148,13 +138,13 @@ export const EmailSubscribe = ({
           placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          disabled={isLoading || !hasResult}
+          disabled={isLoading}
           className="flex-1 text-sm sm:text-base"
           maxLength={255}
         />
         <Button 
           type="submit" 
-          disabled={isLoading || !hasResult} 
+          disabled={isLoading} 
           className="w-full sm:w-auto text-sm sm:text-base"
         >
           {isLoading ? t("發送中...", "Sending...") : t("發送", "Send")}
